@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import SignUpScreen from './src/SignUpScreen';
+import SignUpScreen from './src/component/SignUpScreen';
 
 const App = () => {
     return (

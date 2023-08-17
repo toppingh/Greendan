@@ -8,7 +8,7 @@ const SignUpScreen = () => {
     const [password2, setPassword2] = useState('');
 
     const handleSignUp = async () => {
-        const djServer = 'http://127.0.0.1:8000/accounts/dj-rest-auth/registration/';
+        const djServer = 'http://172.30.1.32:8000/accounts/dj-rest-auth/registration/';
 
         try {
             const response = await fetch(djServer, {
@@ -17,10 +17,10 @@ const SignUpScreen = () => {
                     'Content-type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username,
-                    email,
-                    password1,
-                    password2,
+                    username:"username",
+                    email: "email",
+                    password1: "password1",
+                    password2: "password2",
                 }),
             });
 
