@@ -1,70 +1,85 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Alert } from 'react-native';
+import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
 
 const SignUpScreen = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [password1, setPassword1] = useState('');
+    const [password2, setPassword2] = useState('');
 
-    const handleSignUp = () => {
+    const handleSignUp = async () => {
         const djServer = 'http://127.0.0.1:8000/accounts/dj-rest-auth/registration/';
 
-        fetch(djServer, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify({
-                username,
-                email,
-                password,
-                password2: passwordConfirm, // Rename to password2 or passwordConfirm based on your Django model
-            }),
-        })
-        .then(response => {
+        try {
+            const response = await fetch(djServer, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username,
+                    email,
+                    password1,
+                    password2,
+                }),
+            });
+
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error('Network reponse was not ok');
             }
-            return response.json();
-        })
-        .then(data => {
+
+            const data = await response.json();
             if (data.success) {
                 Alert.alert('회원가입 성공', '환영합니다!!');
             } else {
                 Alert.alert('회원가입 실패', data.message);
             }
-        })
-        .catch(error => {
-            console.error('API 요청 에러:', error);
-        });
+        } catch (error) {
+            console.error('API 요청 에러 : ', error);
+        }
     };
 
     return (
-        <View>
+        <View style={styles.container}>
             <TextInput 
+                style={styles.input}
                 placeholder="닉네임"
                 value={username}
                 onChangeText={setUsername}
             />
             <TextInput 
+                style={styles.input}
                 placeholder="이메일"
                 value={email}
                 onChangeText={setEmail}
             />
             <TextInput 
+                style={styles.input}
                 placeholder="비밀번호"
-                value={password}
-                onChangeText={setPassword}
+                value={password1}
+                onChangeText={setPassword1}
+                secureTextEntry={true}
             />
             <TextInput 
+                style={styles.input}
                 placeholder="비밀번호 재확인"
-                value={passwordConfirm}
-                onChangeText={setPasswordConfirm}
+                value={password2}
+                onChangeText={setPassword2}
+                secureTextEntry={true}
             />
             <Button title="가입하기" onPress={handleSignUp}></Button>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    input: {
+        width: '80%',
+        height: 40,
+        borderWidth: 1,
+        marginBottom: 10,
+        paddingLeft: 10,
+    },
+});
 
 export default SignUpScreen;
