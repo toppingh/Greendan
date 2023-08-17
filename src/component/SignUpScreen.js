@@ -17,23 +17,15 @@ const SignUpScreen = () => {
                     'Content-type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username:"username",
-                    email: "email",
-                    password1: "password1",
-                    password2: "password2",
+                    username:username,
+                    email: email,
+                    password1: password1,
+                    password2: password2,
                 }),
             });
 
-            if (!response.ok) {
-                throw new Error('Network reponse was not ok');
-            }
-
             const data = await response.json();
-            if (data.success) {
-                Alert.alert('회원가입 성공', '환영합니다!!');
-            } else {
-                Alert.alert('회원가입 실패', data.message);
-            }
+            Alert.alert('API 요청 data : ', JSON.stringify(data, null, 2));
         } catch (error) {
             console.error('API 요청 에러 : ', error);
         }
