@@ -8,7 +8,7 @@ const SignUpScreen = () => {
     const [password2, setPassword2] = useState('');
 
     const handleSignUp = async () => {
-        const djServer = 'http://172.30.1.32:8000/accounts/dj-rest-auth/registration/';
+        const djServer = 'http://172.30.1.3:8000/accounts/dj-rest-auth/registration/';
 
         try {
             const response = await fetch(djServer, {
@@ -25,7 +25,7 @@ const SignUpScreen = () => {
             });
 
             const data = await response.json();
-            Alert.alert('API 요청 data : ', JSON.stringify(data, null, 2));
+            Alert.alert('회원가입 성공!!');
         } catch (error) {
             console.error('API 요청 에러 : ', error);
         }
