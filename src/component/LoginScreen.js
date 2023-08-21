@@ -24,7 +24,6 @@ const LoginScreen = () => {
             
         } catch (error) {
             console.error('API 요청 data : ', JSON.stringify(data, null, 2));
-            // console.error(`에러 발생 : ${error}`);
         }
     };
 
