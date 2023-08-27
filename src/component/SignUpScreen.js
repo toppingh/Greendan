@@ -8,7 +8,7 @@ const SignUpScreen = () => {
     const [password2, setPassword2] = useState('');
 
     const handleSignUp = async () => {
-        const djServer = 'http://172.30.1.3:8000/accounts/dj-rest-auth/registration/';
+        const djServer = 'http://172.30.1.62:8000/accounts/dj-rest-auth/registration/';
 
         try {
             const response = await fetch(djServer, {

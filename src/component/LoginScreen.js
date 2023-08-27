@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
+// import {useNavigation} from '@react-navigation/native';
 
 const LoginScreen = () => {
+    // const navigation = useNavigation();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoggedIn, setLoggedIn] = useState(false);
 
     const handleLogin = async () => {
         try{
-            const response = await fetch ('http://172.30.1.3:8000/accounts/dj-rest-auth/login/', {
+            const response = await fetch ('http://172.30.1.62:8000/accounts/dj-rest-auth/login/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -21,9 +24,11 @@ const LoginScreen = () => {
 
             const data = await response.json();
             Alert.alert('로그인 성공!!');
+            // navigation.navigate('ChangePassword');
             
         } catch (error) {
             console.error('API 요청 data : ', JSON.stringify(data, null, 2));
+            // console.error(`에러 발생 : ${error}`);
         }
     };
 
@@ -47,6 +52,10 @@ return (
                     style={styles.input}    
                 />
                 <Button title='로그인' onPress={handleLogin} />
+                <Button
+                    title='비밀번호 변경'
+                    onPress={handleChangePassword}
+                />
             </View>
         )}
     </View>

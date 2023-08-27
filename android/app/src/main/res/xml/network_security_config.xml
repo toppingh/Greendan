@@ -4,5 +4,7 @@
         <domain includeSubdomains="true">127.0.0.1</domain>
         <domain includeSubdomains="true">172.30.1.3</domain>
         <domain includeSubdomains="true">192.168.35.29</domain>
+        <domain includeSubdomains="true">172.30.1.20</domain>
+        <domain includeSubdomains="true">172.30.1.62</domain>
     </domain-config>
 </network-security-config>
