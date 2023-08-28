@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
-// import {useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const LoginScreen = () => {
-    // const navigation = useNavigation();
+    const navigation = useNavigation();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -54,7 +54,7 @@ return (
                 <Button title='로그인' onPress={handleLogin} />
                 <Button
                     title='비밀번호 변경'
-                    onPress={handleChangePassword}
+                    onPress={() => navigation.navigate('ChangePassword')}
                 />
             </View>
         )}

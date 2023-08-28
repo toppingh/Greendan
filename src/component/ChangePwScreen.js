@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
-import {userNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const ChangePwScreen = () => {
     const navigation = useNavigation();
-    const route = userRoute();
+    const route = useRoute();
 
     const userPk = route.params?.userPk || null;
 
@@ -16,8 +16,8 @@ const ChangePwScreen = () => {
     const handleChangePassword = async () => {
         if (newPassword === confirmNewPassword) {
             try {
-                const djServer = await fetch('http://172.30.1.62:8000/accounts/dj-rest-auth/password/change/', {
-                    method: 'POST',
+                const djServer = await fetch('http://172.30.1.62:8000/accounts/change/12', {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
