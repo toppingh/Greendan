@@ -1,72 +1,68 @@
-import React, {useState} from "react";
+import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
 
 const LoginScreen = () => {
     const navigation = useNavigation();
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isLoggedIn, setLoggedIn] = useState(false);
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkzNDIwMDY0LCJpYXQiOjE2OTM0MTI4MzEsImp0aSI6ImMxOWJiZjA1NGI1YjQwNmQ4MjExMGU2ZGUwNmFlMWIxIiwidXNlcl9pZCI6MTJ9.sloHL72HrPci3N01FYm91pAiba_7pUfZCvt_XEmbwd4';
 
     const handleLogin = async () => {
-        try{
-            const response = await fetch ('http://192.168.35.29:8000/accounts/dj-rest-auth/login/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+        try {
+            const response = await axios.post(
+                'http://192.168.35.29:8000/accounts/dj-rest-auth/login/',
+                {
                     email,
-                    password
-                }),
-            });
+                    password,
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Token ${token}`,
+                    },
+                }
+            );
 
-            if (response.ok) {
-                setLoggedIn(true);
+            if (response.status === 200) {
                 Alert.alert('로그인 성공!!');
-                navigation.navigate('ChangePassword');
+                navigation.navigate('ChangePassword', {email, token});
+
             } else {
-                const data = await response.json();
-                console.error('API 요청 data : ', JSON.stringify(data, null, 2));
+                console.error('API 요청 실패:', response.data);
             }
-            // const data = await response.json();
-            // Alert.alert('로그인 성공!!');
-            // navigation.navigate('ChangePassword');
-            
         } catch (error) {
-            console.error('API 요청 data : ', JSON.stringify(data, null, 2));
-            // console.error(`에러 발생 : ${error}`);
+            console.error('API 요청 오류:', error);
         }
     };
 
-return (
-    <View style={styles.container}>
-        {isLoggedIn ? (
-            <Text>환영합니다!</Text>
-        ) : (
-            <View>
-                <TextInput
-                    placeholder='이메일'
-                    value={email}
-                    onChangeText={setEmail}
-                    style={styles.input}
-                />
-                <TextInput 
-                    placeholder='비밀번호'
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                    style={styles.input}    
-                />
-                <Button title='로그인' onPress={handleLogin} />
-            </View>
-        )}
-    </View>
+    return (
+        <View style={styles.container}>
+            <TextInput
+                placeholder="이메일"
+                value={email}
+                onChangeText={setEmail}
+                style={styles.input}
+            />
+            <TextInput
+                placeholder="비밀번호"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                style={styles.input}
+            />
+            <Button title="로그인" onPress={handleLogin} />
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     input: {
         width: '80%',
         height: 40,

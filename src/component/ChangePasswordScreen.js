@@ -1,76 +1,64 @@
-import React, { useState } from "react";
-import { View, TextInput, Button, Alert, StyleSheet, Text } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import axios from 'axios';
+import {useRoute} from '@react-navigation/native';
 
 const ChangePasswordScreen = () => {
-    const navigation = useNavigation();
+    const [newPassword1, setNewPassword1] = useState('');
+    const [newPassword2, setNewPassword2] = useState('');
 
-    const [currentPassword, setCurrentPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmNewPassword, setConfirmNewPassword] = useState('');
-    const [changeSuccess, setChangeSuccess] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-    
+    const route = useRoute();
+    const {email, token} = route.params;
+
     const handleChangePassword = async () => {
-        if (newPassword === confirmNewPassword) {
-            try {
-                const djServer = await fetch('http://192.168.35.29:8000/accounts/change/12', {
-                    method: 'PUT',
+        try {
+            if (newPassword1 !== newPassword2) {
+                Alert.alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+            const response = await axios.post(
+                'http://192.168.35.29:8000/accounts/dj-rest-auth/password/change/', // Django 서버의 비밀번호 변경 엔드포인트로 변경
+                {
+                    newPassword1,
+                    newPassword2,
+                },
+                {
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Token ${token}`,
                     },
-                    body: JSON.stringify({
-                        currentPassword,
-                        newPassword,
-                    }),
-                });
-
-                if (djServer.ok) {
-                    setChangeSuccess(true);
-                    Alert.alert('비밀번호가 성공적으로 변경됨');
-                } else {
-                    const errorData = await djServer.json();
-                    setErrorMessage(errorData.detail || '비밀번호 변경 실패');
                 }
-            } catch (error) {
-                console.error(`에러발생 : ${error}`);
+            );
+
+            if (response.status === 200) {
+                Alert.alert('비밀번호 변경 성공');
+                // 비밀번호 변경 성공 후 로그아웃 페이지 이동
+            } else {
+                console.error('API 요청 실패:', response.data);
             }
-        } else {
-            setErrorMessage('새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.');
+        } catch (error) {
+            console.error('API 요청 오류:', error);
+            console.error('토큰 값:', token);
         }
     };
 
     return (
         <View style={styles.container}>
-            {changeSuccess ? (
-                <Text>비밀번호가 성공적으로 재설정되었습니다.</Text>
-            ) : (
-                <View>
-                    <TextInput 
-                    placeholder='현재 비밀번호'
-                    value={currentPassword}
-                    onChangeText={setCurrentPassword}
-                    secureTextEntry
-                    style={styles.input}
-                    />
-                    <TextInput 
-                    placeholder='새 비밀번호'
-                    value={newPassword}
-                    onChangeText={setNewPassword}
-                    secureTextEntry
-                    style={styles.input}
-                    />
-                    <TextInput 
-                    placeholder='새 비밀번호 확인'
-                    value={confirmNewPassword}
-                    onChangeText={setConfirmNewPassword}
-                    secureTextEntry
-                    style={styles.input}
-                    />
-                    <Button title='비밀번호 변경' onPress={handleChangePassword} />
-                    {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-                </View>
-            )}
+            <TextInput
+                placeholder="새 비밀번호"
+                value={newPassword1}
+                onChangeText={setNewPassword1}
+                secureTextEntry
+                style={styles.input}
+            />
+            <TextInput
+                placeholder="새 비밀번호 확인"
+                value={newPassword2}
+                onChangeText={setNewPassword2}
+                secureTextEntry
+                style={styles.input}
+            />
+            <Button title="비밀번호 변경" onPress={handleChangePassword} />
         </View>
     );
 };
@@ -78,20 +66,15 @@ const ChangePasswordScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'center',
+        alignItems: 'center',
     },
-
     input: {
         width: '80%',
         height: 40,
         borderWidth: 1,
         marginBottom: 10,
         paddingLeft: 10,
-    },
-    errorText: {
-        color: 'red',
-        marginBottom: 10,
     },
 });
 
