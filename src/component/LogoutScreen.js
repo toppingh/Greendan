@@ -4,9 +4,9 @@ import {View, Text, Button, Alert, StyleSheet} from 'react-native';
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    cnst handleLogout = async () => {
+    const handleLogout = async () => {
         try {
-            const djServer = await fetch('http://172.30.1.62:8000/accounts/dj-rest-auth/logout', {
+            const djServer = await fetch('http://192.168.35.29:8000/accounts/dj-rest-auth/logout', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

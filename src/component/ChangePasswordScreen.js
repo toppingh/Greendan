@@ -1,42 +1,42 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { View, TextInput, Button, Alert, StyleSheet, Text } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
-const ChangePwScreen = () => {
+const ChangePasswordScreen = () => {
     const navigation = useNavigation();
-    const route = useRoute();
 
-    const userPk = route.params?.userPk || null;
-
+    const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [changeSuccess, setChangeSuccess] = useState(false);
-    const [errorMessage, setErrorMessage] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
     
     const handleChangePassword = async () => {
         if (newPassword === confirmNewPassword) {
             try {
-                const djServer = await fetch('http://172.30.1.62:8000/accounts/change/12', {
+                const djServer = await fetch('http://192.168.35.29:8000/accounts/change/12', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        newPassword: newPassword,
-                        user_pk: userPk,
+                        currentPassword,
+                        newPassword,
                     }),
                 });
+
                 if (djServer.ok) {
                     setChangeSuccess(true);
+                    Alert.alert('비밀번호가 성공적으로 변경됨');
                 } else {
                     const errorData = await djServer.json();
-                    setErrorMessage(errorData.detail || '비밀번호 재설정 실패');
+                    setErrorMessage(errorData.detail || '비밀번호 변경 실패');
                 }
             } catch (error) {
                 console.error(`에러발생 : ${error}`);
             }
         } else {
-            console.error('새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.')
+            setErrorMessage('새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.');
         }
     };
 
@@ -46,6 +46,13 @@ const ChangePwScreen = () => {
                 <Text>비밀번호가 성공적으로 재설정되었습니다.</Text>
             ) : (
                 <View>
+                    <TextInput 
+                    placeholder='현재 비밀번호'
+                    value={currentPassword}
+                    onChangeText={setCurrentPassword}
+                    secureTextEntry
+                    style={styles.input}
+                    />
                     <TextInput 
                     placeholder='새 비밀번호'
                     value={newPassword}
@@ -60,7 +67,8 @@ const ChangePwScreen = () => {
                     secureTextEntry
                     style={styles.input}
                     />
-                    <Button title='비밀번호 재설정' onPress={handleChangePassword} />
+                    <Button title='비밀번호 변경' onPress={handleChangePassword} />
+                    {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
                 </View>
             )}
         </View>
@@ -68,11 +76,11 @@ const ChangePwScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    // container: {
-    //     flex: 1,
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    // },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 
     input: {
         width: '80%',
@@ -81,6 +89,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingLeft: 10,
     },
+    errorText: {
+        color: 'red',
+        marginBottom: 10,
+    },
 });
 
-export default ChangePwScreen;
+export default ChangePasswordScreen;

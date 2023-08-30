@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {View, Text} from 'react-native';
 // import SignUpScreen from './src/component/SignUpScreen';
 import LoginScreen from './src/component/LoginScreen';
-import ChangePwScreen from './src/component/ChangePwScreen';
+import ChangePasswordScreen from './src/component/ChangePasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,7 +13,7 @@ const App = () => {
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Login">
                 <Stack.Screen name="Login" component={LoginScreen} />
-                <Stack.Screen name="ChangePassword" component={ChangePwScreen} />
+                <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
