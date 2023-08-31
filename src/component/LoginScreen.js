@@ -7,11 +7,11 @@ const LoginScreen = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkzNDIwMDY0LCJpYXQiOjE2OTM0MTI4MzEsImp0aSI6ImMxOWJiZjA1NGI1YjQwNmQ4MjExMGU2ZGUwNmFlMWIxIiwidXNlcl9pZCI6MTJ9.sloHL72HrPci3N01FYm91pAiba_7pUfZCvt_XEmbwd4';
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkzNDcyNDU3LCJpYXQiOjE2OTM0NjUyNTcsImp0aSI6ImExZjBmY2UxY2Q3OTQyNzU4MjJhYzMyZTg0YzY1ZjA2IiwidXNlcl9pZCI6MTJ9.Affpgfup9GIhbIxuzel61HXvK3Vusjk0YyUS69t7xl8";
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post(
+            const djServer = await axios.post(
                 'http://192.168.35.29:8000/accounts/dj-rest-auth/login/',
                 {
                     email,
@@ -20,17 +20,17 @@ const LoginScreen = () => {
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Token ${token}`,
+                        'Authorization': `Bearer ${token}`,
                     },
                 }
             );
 
-            if (response.status === 200) {
+            if (djServer.status === 200) {
                 Alert.alert('로그인 성공!!');
                 navigation.navigate('ChangePassword', {email, token});
 
             } else {
-                console.error('API 요청 실패:', response.data);
+                console.error('API 요청 실패:', djServer.data);
             }
         } catch (error) {
             console.error('API 요청 오류:', error);

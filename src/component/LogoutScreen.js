@@ -1,20 +1,27 @@
 import React, {useState} from 'react';
 import {View, Text, Button, Alert, StyleSheet} from 'react-native';
+import axios from 'axios';
+import {useRoute, useNavigation} from '@react-navigation/native';
 
-const App = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+const LogoutScreen = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const route = useRoute();
+    const {token} = route.params;
+    const navigation = useNavigation();
 
     const handleLogout = async () => {
         try {
-            const djServer = await fetch('http://192.168.35.29:8000/accounts/dj-rest-auth/logout', {
+            const djServer = await fetch('http://192.168.35.29:8000/accounts/dj-rest-auth/logout/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
             });
             if (djServer.status == 200) {
                 setIsLoggedIn(false);
                 Alert.alert('로그아웃 성공!');
+                navigation.navigate('Login');
             } else {
                 Alert.alert('로그아웃 실패');
             }
@@ -44,3 +51,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 });
+
+export default LogoutScreen;
