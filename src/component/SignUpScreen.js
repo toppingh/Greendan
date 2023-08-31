@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {AsyncStorage} from '@react-native-async-storage/async-storage';
 
 const SignUpScreen = () => {
     const [username, setUsername] = useState('');
@@ -8,7 +10,7 @@ const SignUpScreen = () => {
     const [password2, setPassword2] = useState('');
 
     const handleSignUp = async () => {
-        const djServer = 'http://172.30.1.62:8000/accounts/dj-rest-auth/registration/';
+        const djServer = 'http://192.168.35.29:8000/accounts/dj-rest-auth/registration/';
 
         try {
             const response = await fetch(djServer, {
@@ -25,7 +27,13 @@ const SignUpScreen = () => {
             });
 
             const data = await response.json();
-            Alert.alert('회원가입 성공!!');
+            if (response.status === 201 && data.key) {
+                const token = data.key;
+                await AsyncStorage.setItem('authToken', token);
+
+                Alert.alert('회원가입 성공!!');
+                console.error(`토큰 확인 : ${token}`);
+            }
         } catch (error) {
             console.error('API 요청 에러 : ', error);
         }

@@ -7,7 +7,7 @@ const LoginScreen = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkzNDcyNDU3LCJpYXQiOjE2OTM0NjUyNTcsImp0aSI6ImExZjBmY2UxY2Q3OTQyNzU4MjJhYzMyZTg0YzY1ZjA2IiwidXNlcl9pZCI6MTJ9.Affpgfup9GIhbIxuzel61HXvK3Vusjk0YyUS69t7xl8";
+    // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkzNDgxMDA4LCJpYXQiOjE2OTM0NzM4MDgsImp0aSI6ImZkZWQ5YWI5MWE3YTRiZTNiNTZmMTk4ZTgzMTc0ZmNiIiwidXNlcl9pZCI6MTJ9.3XsxjX12BB0Zwz7boixJHd9oh-nHTQs074AR49s0uOQ";
 
     const handleLogin = async () => {
         try {
@@ -20,14 +20,14 @@ const LoginScreen = () => {
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
+                        // 'Authorization': `Bearer ${token}`,
                     },
                 }
             );
 
             if (djServer.status === 200) {
                 Alert.alert('로그인 성공!!');
-                navigation.navigate('ChangePassword', {email, token});
+                navigation.navigate('EditProfile', {email});
 
             } else {
                 console.error('API 요청 실패:', djServer.data);
