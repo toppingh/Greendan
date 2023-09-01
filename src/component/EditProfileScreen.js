@@ -18,7 +18,7 @@ const EditProfileScreen = () => {
                 return;
             }
 
-            const djServer = await axios.patch('http://192.168.35.29:800/accounts/change/username/',
+            const djServer = await axios.patch('http://192.168.1.13:800/accounts/change/username/',
                 {
                     newUsername,
                 },

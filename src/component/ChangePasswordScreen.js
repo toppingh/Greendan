@@ -18,7 +18,7 @@ const ChangePasswordScreen = () => {
                 return;
             }
             const djServer = await axios.post(
-                'http://192.168.35.29:8000/accounts/dj-rest-auth/password/change/', // Django 서버의 비밀번호 변경 엔드포인트로 변경
+                'http://192.168.1.13:8000/accounts/dj-rest-auth/password/change/', // Django 서버의 비밀번호 변경 엔드포인트로 변경
                 {
                     new_password1,
                     new_password2,

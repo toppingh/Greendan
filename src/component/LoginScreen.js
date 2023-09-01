@@ -1,18 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkzNDgxMDA4LCJpYXQiOjE2OTM0NzM4MDgsImp0aSI6ImZkZWQ5YWI5MWE3YTRiZTNiNTZmMTk4ZTgzMTc0ZmNiIiwidXNlcl9pZCI6MTJ9.3XsxjX12BB0Zwz7boixJHd9oh-nHTQs074AR49s0uOQ";
+    const [token, setToken] = useState('');
+
+    useEffect(() => {
+        const getToken = async() => {
+            try {
+                const accessToken = await AsyncStorage.getItem('authToken');
+                if (accessToken !== null) {
+                    setToken(accessToken);
+                }
+            } catch (error) {
+                console.error('토큰 에러 : ', error);
+            }
+        };
+        getToken();
+    }, []);
 
     const handleLogin = async () => {
         try {
             const djServer = await axios.post(
-                'http://192.168.35.29:8000/accounts/dj-rest-auth/login/',
+                'http://192.168.1.13:8000/accounts/dj-rest-auth/login/',
                 {
                     email,
                     password,
@@ -20,14 +35,19 @@ const LoginScreen = () => {
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        // 'Authorization': `Bearer ${token}`,
+                        'Authorization': `Bearer ${token}`,
                     },
                 }
             );
 
             if (djServer.status === 200) {
                 Alert.alert('로그인 성공!!');
-                navigation.navigate('EditProfile', {email});
+                const serverToken = djServer.data.access;
+                console.error(serverToken); // 서버 토큰 확인용
+                console.error(token); // 로그인용 토큰
+                if (token === serverToken) {
+                    navigation.navigate('EditProfile');
+                }
 
             } else {
                 console.error('API 요청 실패:', djServer.data);
