@@ -1,14 +1,12 @@
-import React, {useState} from 'react';
-import {View, TextInput, Button, Alert, StyleSheet, Text} from 'react-native';
-import axios from 'axios';
-import {useRoute, useNavigation} from '@react-navigation/native';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import React, { useState } from 'react';
+import { View, TextInput, Button, Alert, StyleSheet, Text } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
 const EditProfileScreen = () => {
     const [newUsername, setNewUserName] = useState('');
 
     const route = useRoute();
-    const {token, currentUsername} = route.params;
+    const { token, currentUsername } = route.params;
     const navigation = useNavigation();
 
     const handleEditProfile = async () => {
@@ -18,23 +16,24 @@ const EditProfileScreen = () => {
                 return;
             }
 
-            const djServer = await axios.patch('http://192.168.1.13:800/accounts/change/username/',
-                {
+            const headers = new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            });
+
+            const response = await fetch('http://192.168.1.13:8000/accounts/change/username/', {
+                method: 'PUT',
+                headers,
+                body: JSON.stringify({
                     newUsername,
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                }
-            );
-            
-            if (djServer.status === 200) {
+                }),
+            });
+
+            if (response.status === 200) {
                 Alert.alert(`${newUsername}으로 유저네임 수정 성공`);
-                navigation.navigate('ChangePassword');
+                navigation.navigate('ChangePassword', {token});
             } else {
-                console.error('API 요청 실패 : ', djServer.data);
+                console.error('API 요청 실패 : ', await response.json());
             }
         } catch (error) {
             console.error('API 요청 오류 : ', error);

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
-import {useRoute, useNavigation} from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
 const ChangePasswordScreen = () => {
     const [new_password1, setNewPassword1] = useState('');
     const [new_password2, setNewPassword2] = useState('');
 
     const route = useRoute();
-    const {email, token} = route.params;
+    const { email, token } = route.params;
     const navigation = useNavigation();
 
     const handleChangePassword = async () => {
@@ -18,7 +18,7 @@ const ChangePasswordScreen = () => {
                 return;
             }
             const djServer = await axios.post(
-                'http://192.168.1.13:8000/accounts/dj-rest-auth/password/change/', // Django 서버의 비밀번호 변경 엔드포인트로 변경
+                'http://192.168.1.13:8000/accounts/dj-rest-auth/password/change/',
                 {
                     new_password1,
                     new_password2,
@@ -33,7 +33,7 @@ const ChangePasswordScreen = () => {
 
             if (djServer.status === 200) {
                 Alert.alert('비밀번호 변경 성공');
-                navigation.navigate('Logout', {email, token});
+                navigation.navigate('Login'); // 로그인 페이지로 이동
             } else {
                 console.error('API 요청 실패:', djServer.data);
             }
