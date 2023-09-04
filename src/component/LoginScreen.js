@@ -32,7 +32,7 @@ const LoginScreen = () => {
                 'Authorization': `Bearer ${token}`,
             });
 
-            const response = await fetch('http://192.168.1.13:8000/accounts/dj-rest-auth/login/', {
+            const response = await fetch('http://172.18.77.126:8000/accounts/dj-rest-auth/login/', {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 10,
         paddingLeft: 10,
+        color: 'black',
     },
 });
 

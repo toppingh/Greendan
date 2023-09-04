@@ -7,16 +7,18 @@ import LoginScreen from './src/component/LoginScreen';
 import ChangePasswordScreen from './src/component/ChangePasswordScreen';
 import LogoutScreen from './src/component/LogoutScreen';
 import EditProfileScreen from './src/component/EditProfileScreen';
+import ProfileImgScreen from './src/component/ProfileImgScreen';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Signup">
+            <Stack.Navigator initialRouteName="Login">
                 <Stack.Screen name="Signup" component={SignUpScreen} />
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+                <Stack.Screen name="ProfileImg" component={ProfileImgScreen} />
                 <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
                 <Stack.Screen name="Logout" component={LogoutScreen} />
             </Stack.Navigator>

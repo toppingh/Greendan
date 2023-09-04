@@ -21,7 +21,7 @@ const EditProfileScreen = () => {
                 'Authorization': `Bearer ${token}`,
             });
 
-            const response = await fetch('http://192.168.1.13:8000/accounts/change/username/', {
+            const response = await fetch('http://172.18.77.126:8000/accounts/change/username/', {
                 method: 'PUT',
                 headers,
                 body: JSON.stringify({
@@ -31,7 +31,7 @@ const EditProfileScreen = () => {
 
             if (response.status === 200) {
                 Alert.alert(`${newUsername}으로 유저네임 수정 성공`);
-                navigation.navigate('ChangePassword', {token});
+                navigation.navigate('ProfileImg', {token});
             } else {
                 console.error('API 요청 실패 : ', await response.json());
             }
