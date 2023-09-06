@@ -21,7 +21,7 @@ const EditProfileScreen = () => {
                 'Authorization': `Bearer ${token}`,
             });
 
-            const response = await fetch('http://172.18.77.126:8000/accounts/change/username/', {
+            const response = await fetch('http://172.30.1.7:8000/accounts/change/username/', {
                 method: 'PUT',
                 headers,
                 body: JSON.stringify({
@@ -42,9 +42,39 @@ const EditProfileScreen = () => {
         }
     };
 
+    // 로그인 되어있는 유저 이름
+    const fetchCurrentUsername = async () => {
+        try {
+            const headers = new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            });
+
+            const response = await fetch('http://172.30.1.7:8000/accounts/profile/', {
+                method: 'GET',
+                headers,
+            });
+
+            if (response.status === 200) {
+                const data = await response.json();
+                setCurrentUsername(data.username);
+            } else {
+                console.error('API 요청 실패 : ', await response.json());
+            }
+        } catch (error) {
+            console.error('API 요청 오류 : ', error);
+            console.error('토큰 값: ', token);
+        }
+    };
+
+    useEffect(() => {
+        fetchCurrentUsername();
+    }, []);
+
     return (
         <View style={styles.container}>
             <Text>프로필 수정</Text>
+            <Text>현재 유저 이름 : {currentUsername}</Text>
             <TextInput 
                 placeholder="새 이름"
                 value={newUsername}

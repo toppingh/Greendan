@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, Button, Alert, StyleSheet} from 'react-native';
 import axios from 'axios';
 import {useRoute, useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LogoutScreen = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -11,7 +12,7 @@ const LogoutScreen = () => {
 
     const handleLogout = async () => {
         try {
-            const djServer = await fetch('http://192.168.1.13:8000/accounts/dj-rest-auth/logout/', {
+            const djServer = await fetch('http://192.168.35.29:8000/accounts/dj-rest-auth/logout/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -19,7 +20,9 @@ const LogoutScreen = () => {
                 },
             });
             if (djServer.status == 200) {
-                setIsLoggedIn(false);
+                await AsyncStorage.removeItem('authToken');
+                console.log('토큰이 삭제됨');
+                // setIsLoggedIn(false);
                 Alert.alert('로그아웃 성공!');
                 navigation.navigate('Login');
             } else {

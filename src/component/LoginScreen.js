@@ -1,38 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {View, TextInput, Button, Alert, StyleSheet, Text} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
-    const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [token, setToken] = useState('');
-
-    useEffect(() => {
-        const getToken = async () => {
-            try {
-                const accessToken = await AsyncStorage.getItem('authToken');
-                if (accessToken !== null) {
-                    setToken(accessToken);
-                } else {
-                    console.error('authToken이 없음!!');
-                }
-            } catch (error) {
-                console.error('토큰 에러 : ', error);
-            }
-        };
-        getToken();
-    }, []);
+    
+    const navigation = useNavigation();
 
     const handleLogin = async () => {
         try {
+            const csrfResponse = await fetch('http://172.30.1.7:8000/accounts/get-csrf-token/');
+            const csrfToken = await csrfResponse.json();
+
             const headers = new Headers({
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                'X-CSRFToken': csrfToken.csrf_token,
             });
 
-            const response = await fetch('http://172.18.77.126:8000/accounts/dj-rest-auth/login/', {
+            const response = await fetch('http://172.30.1.7:8000/accounts/dj-rest-auth/login/', {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
@@ -40,33 +27,45 @@ const LoginScreen = () => {
                     password,
                 }),
             });
+            // console.log(response);
 
             if (response.status === 200) {
-                Alert.alert('로그인 성공!!');
-                navigation.navigate('EditProfile', {token});
+                const data = await response.json();
+                // const token = data.key;
+
+                if (data.token) {
+                    await AsyncStorage.setItem('authToken', data.token);
+                    console.log('로그인 화면에서 토큰:', data.token);
+                    Alert.alert('로그인 성공!');
+                    navigation.navigate('ProfileImg');
+                } else {
+                    Alert.alert('로그인 실패');
+                    console.log(`로그인 토큰 : ${data}`);
+                    // console.log(token);
+                }
             } else {
-                const responseData = await response.json();
-                console.error('API 요청 실패:', responseData);
+                Alert.alert('로그인 실패');
+                console.error('HTTP 오류: ', response.status);
             }
         } catch (error) {
-            console.error('API 요청 오류:', error);
+            console.error('로그인 오류 : ', error);
         }
     };
 
     return (
         <View style={styles.container}>
-            <TextInput
-                placeholder="이메일"
-                value={email}
-                onChangeText={setEmail}
-                style={styles.input}
+            <TextInput 
+            placeholder="아이디"
+            value={email}
+            onChangeText={setEmail}
+            style={styles.input}
             />
-            <TextInput
-                placeholder="비밀번호"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                style={styles.input}
+            <TextInput 
+            placeholder="비밀번호"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={styles.input}
             />
             <Button title="로그인" onPress={handleLogin} />
         </View>
