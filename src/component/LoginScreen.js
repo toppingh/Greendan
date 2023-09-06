@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, TextInput, Button, Alert, StyleSheet, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,20 +6,41 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const LoginScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [token, setToken] = useState('');
     
     const navigation = useNavigation();
 
+    useEffect(() => {
+        const getToken = async () => {
+            try {
+                const accessToken = await AsyncStorage.getItem('authToken');
+                console.log(`accessToken 출력 : ${accessToken}`);
+                if (accessToken !== null) {
+                    console.log('토큰을 성공적으로 가져옴', accessToken);
+                    setToken(accessToken);
+                } else {
+                    console.error('authToken이 없음!');
+                }
+            } catch (error) {
+                console.error('토큰 에러: ', error);
+            }
+        };
+        getToken();
+    }, []);
+
     const handleLogin = async () => {
         try {
-            const csrfResponse = await fetch('http://172.30.1.7:8000/accounts/get-csrf-token/');
+            const csrfResponse = await fetch('http://192.168.35.29:8000/accounts/get-csrf-token/');
             const csrfToken = await csrfResponse.json();
 
             const headers = new Headers({
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken.csrf_token,
+                // 'X-CSRFToken': csrfToken.csrf_token,
+                'Authorization': `Bearer ${token}`,
             });
+            console.log(`headers 정보: ${headers}`);
 
-            const response = await fetch('http://172.30.1.7:8000/accounts/dj-rest-auth/login/', {
+            const response = await fetch('http://192.168.35.29:8000/accounts/dj-rest-auth/login/', {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
@@ -27,28 +48,30 @@ const LoginScreen = () => {
                     password,
                 }),
             });
-            // console.log(response);
+            console.log(`response정보 : ${response}`);
 
             if (response.status === 200) {
-                const data = await response.json();
-                // const token = data.key;
+                const responseData = await response.json();
+                const accessToken = responseData.access;
+                const pk = responseData.user.pk;
 
-                if (data.token) {
-                    await AsyncStorage.setItem('authToken', data.token);
-                    console.log('로그인 화면에서 토큰:', data.token);
+                if (accessToken) {
+                    // onLogin(token);
+                    await AsyncStorage.setItem('authToken', accessToken);
+                    console.log('로그인 화면에서 토큰:', token, pk);
                     Alert.alert('로그인 성공!');
-                    navigation.navigate('ProfileImg');
+                    navigation.navigate('ProfileImg', {token:accessToken, pk});
                 } else {
                     Alert.alert('로그인 실패');
-                    console.log(`로그인 토큰 : ${data}`);
+                    console.log(`로그인 토큰 : ${token}`);
                     // console.log(token);
                 }
             } else {
                 Alert.alert('로그인 실패');
-                console.error('HTTP 오류: ', response.status);
+                console.error('뒤질래 진짜 이 리액트 시발새끼야');
             }
         } catch (error) {
-            console.error('로그인 오류 : ', error);
+            console.error('api 요청 실패 : ', error);
         }
     };
 

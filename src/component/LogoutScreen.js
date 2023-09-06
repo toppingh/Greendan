@@ -4,10 +4,9 @@ import axios from 'axios';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LogoutScreen = () => {
+const LogoutScreen = ({route}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(true);
-    const route = useRoute();
-    const {token} = route.params;
+    const {token, pk} = route.params;
     const navigation = useNavigation();
 
     const handleLogout = async () => {
@@ -20,7 +19,7 @@ const LogoutScreen = () => {
                 },
             });
             if (djServer.status == 200) {
-                await AsyncStorage.removeItem('authToken');
+                await AsyncStorage.removeItem(`${token}`);
                 console.log('토큰이 삭제됨');
                 // setIsLoggedIn(false);
                 Alert.alert('로그아웃 성공!');

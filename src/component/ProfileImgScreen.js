@@ -1,78 +1,98 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, Button, StyleSheet, Alert, Linking } from 'react-native';
+import { View, Image, Button, StyleSheet, Alert, Text } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { PERMISSIONS, RESULTS, check, request } from 'react-native-permissions';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ProfilePictureScreen = () => {
+const ProfilePictureScreen = ({route}) => {
     const [response, setResponse] = useState('');
     const [image, setImage] = useState(null);
     const navigation = useNavigation();
-    const route = useRoute();
+    // const [token, setToken] = useState('');
+    // const {route} = useRoute();
+    const {token, pk} = route.params;
+
+    // useEffect(() => {
+    //     const getToken = async () => {
+    //         try {
+    //             const accessToken = await AsyncStorage.getItem('authToken');
+    //             console.log(`accessToken 출력 : ${accessToken}`);
+    //             if (accessToken !== null) {
+    //                 console.log('토큰을 성공적으로 가져옴', accessToken);
+    //                 setToken(accessToken);
+    //             } else {
+    //                 console.error('authToken이 없음!');
+    //             }
+    //         } catch (error) {
+    //             console.error('토큰 에러: ', error);
+    //         }
+    //     };
+    //     getToken();
+    // }, []);
 
     // 갤러리
     const selectImage = async () => {
-        const authToken = await AsyncStorage.getItem('authToken');
-        console.log(`갤러리에서 : ${authToken}`);
-        launchImageLibrary(
-            {
-                mediaType: 'photo',
-                maxWidth: 1400,
-                maxheight: 1400,
-                includeBase64: true
-            },
-            (response) => {
-                // console.log(response);
-                if (response.didCancel) {
-                    return;
-                } else if (response.errorCode) {
-                    console.log('image Error : ' + response.errorCode);
+        try {
+            launchImageLibrary(
+                {
+                    mediaType: 'photo',
+                    maxWidth: 1400,
+                    maxheight: 1400,
+                    includeBase64: true
+                },
+                (response) => {
+                    // console.log(response);
+                    if (response.didCancel) {
+                        return;
+                    } else if (response.errorCode) {
+                        console.log('image Error : ' + response.errorCode);
+                    }
+
+                    setResponse(response);
+                    setImage(response.assets[0].base64);
                 }
-
-                setResponse(response);
-                setImage(response.assets[0].base64);
-
-            }
-        );
+            );
+        } catch (error) {
+            console.error('AsyncStorage 오류: ', error);
+        }
     };
 
-    const uploadImage = async (imageData) => {
-        const authToken = await AsyncStorage.getItem('authToken');
-        if (!response) {
-            Alert.alert('이미지 선택');
-            return;
-        }
+    const uploadImage = async () => {
+        try {
+            if (!response) {
+                Alert.alert('이미지 선택');
+                return;
+            }
 
-        const formData = new FormData();
-        formData.append('profileImg', {
-            uri: response.assets[0].uri,
-            type: response.assets[0].type,
-            name: response.assets[0].fileName,
-        });
+            const authToken = `Bearer ${token}`;
+    
+            const formData = new FormData();
+            formData.append('profileImg', {
+                uri: response.assets[0].uri,
+                type: response.assets[0].type,
+                name: response.assets[0].fileName,
+            });
 
-        fetch('http://172.30.1.7:8000/accounts/change/profile/', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${authToken}`,
-            },
-            body: formData,
-        })
-        .then((response) => {
-            if (response.status === 200) {
+            const uploadResponse = await fetch(`http://192.168.35.29:8000/accounts/change/profile/${pk}/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': authToken,
+                },
+                body: formData,
+            });
+
+            if (uploadResponse.status === 200) {
                 Alert.alert('이미지 업로드 성공');
-                console.log(response);
-                navigation.navigate('Logout');
+                navigation.navigate('Logout', {token, pk});
             } else {
                 console.error('이미지 업로드 실패');
-                console.log(response);
-                console.log(`업로드 보낼때 : ${authToken}`);
+                console.log(uploadResponse);
             }
-        })
-        .catch((error) => {
+        } catch (error) {
             console.error('이미지 업로드 에러: ', error);
-        });
+        }
     };
 
     return (
