@@ -10,7 +10,10 @@ import LogoutScreen from './src/component/LogoutScreen';
 import EditProfileScreen from './src/component/EditProfileScreen';
 import ProfileImgScreen from './src/component/ProfileImgScreen';
 
-import NormalPhoto from './src/component/NormalPhoto';
+import BlightScreen from './src/component/BlightScreen';
+import BlightDetailScreen from './src/component/BlightDetailScreen';
+
+import TestPhoto from './src/component/TestPhoto';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -41,7 +44,7 @@ const App = () => {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Login">
+            <Stack.Navigator initialRouteName="Blight">
                 <Stack.Screen name="Signup" component={SignUpScreen} />
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="EditProfile" component={EditProfileScreen} />
@@ -50,6 +53,9 @@ const App = () => {
                 <Stack.Screen name="Logout" component={LogoutScreen} />
 
                 <Stack.Screen name="NormalPhoto" component={NormalPhoto} />
+
+                <Stack.Screen name="Blight" component={BlightScreen} />
+                <Stack.Screen name="BlightDetail" component={BlightDetailScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

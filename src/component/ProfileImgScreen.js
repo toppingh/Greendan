@@ -9,27 +9,7 @@ const ProfilePictureScreen = ({route}) => {
     const [response, setResponse] = useState('');
     const [image, setImage] = useState(null);
     const navigation = useNavigation();
-    // const [token, setToken] = useState('');
-    // const {route} = useRoute();
     const {token, pk} = route.params;
-
-    // useEffect(() => {
-    //     const getToken = async () => {
-    //         try {
-    //             const accessToken = await AsyncStorage.getItem('authToken');
-    //             console.log(`accessToken 출력 : ${accessToken}`);
-    //             if (accessToken !== null) {
-    //                 console.log('토큰을 성공적으로 가져옴', accessToken);
-    //                 setToken(accessToken);
-    //             } else {
-    //                 console.error('authToken이 없음!');
-    //             }
-    //         } catch (error) {
-    //             console.error('토큰 에러: ', error);
-    //         }
-    //     };
-    //     getToken();
-    // }, []);
 
     // 갤러리
     const selectImage = async () => {
