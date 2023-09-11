@@ -15,6 +15,12 @@ import BlightDetailScreen from './src/component/BlightDetailScreen';
 
 import TestPhoto from './src/component/TestPhoto';
 
+import QnaScreen from './src/component/QnaScreen';
+import UserQnaScreen from './src/component/UserQnaScreen';
+import QnaDetailScreen from './src/component/QnaDetailScreen';
+import InquiryStyle from './src/component/InquiryStyle';
+import EditInquiry from './src/component/EditInquiry';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
@@ -44,7 +50,7 @@ const App = () => {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Blight">
+            <Stack.Navigator initialRouteName="Login">
                 <Stack.Screen name="Signup" component={SignUpScreen} />
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="EditProfile" component={EditProfileScreen} />
@@ -52,10 +58,16 @@ const App = () => {
                 <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
                 <Stack.Screen name="Logout" component={LogoutScreen} />
 
-                <Stack.Screen name="NormalPhoto" component={NormalPhoto} />
+                <Stack.Screen name="TestPhoto" component={TestPhoto} />
 
                 <Stack.Screen name="Blight" component={BlightScreen} />
                 <Stack.Screen name="BlightDetail" component={BlightDetailScreen} />
+            
+                <Stack.Screen name="Qna" component={QnaScreen} />
+                <Stack.Screen name="UserQna" component={UserQnaScreen} />
+                <Stack.Screen name="QnaDetail" component={QnaDetailScreen} />
+                <Stack.Screen name="InquiryStyle" component={InquiryStyle} options={({route}) => ({title: '문의 내역', headerBackTitleVisible: false, headerShwon: false,})} />
+                <Stack.Screen name="EditInquiry" component={EditInquiry} />
             </Stack.Navigator>
         </NavigationContainer>
     );

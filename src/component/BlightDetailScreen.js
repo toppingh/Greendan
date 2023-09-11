@@ -6,7 +6,7 @@ const BlightScreen = ({ route }) => {
     const [blight, setBlight] = useState([]);
 
     useEffect(() => {
-        fetch(`http://172.30.1.64:8000/home/blight/${blightId}/`)
+        fetch(`http://172.30.1.38/home/blight/${blightId}/`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('네트워크 오류');
@@ -23,7 +23,7 @@ const BlightScreen = ({ route }) => {
 
     const getImage = (imagePath) => {
         try {
-            return `http://172.30.1.64:8000${imagePath}`;
+            return `http://172.30.1.38:8000${imagePath}`;
         } catch (error) {
             console.error('이미지 URL을 가져오는 중 오류 발생:', error);
             // return '기본 이미지 URL'; // 기본 이미지 URL 또는 다른 오류 처리 로직을 추가합니다.

@@ -40,7 +40,7 @@ const LoginScreen = () => {
             });
             console.log(`headers 정보: ${headers}`);
 
-            const response = await fetch('http://172.30.1.64:8000/accounts/dj-rest-auth/login/', {
+            const response = await fetch('http://192.168.35.29:8000/accounts/dj-rest-auth/login/', {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
@@ -58,9 +58,9 @@ const LoginScreen = () => {
                 if (accessToken) {
                     // onLogin(token);
                     await AsyncStorage.setItem('authToken', accessToken);
-                    console.log('로그인 화면에서 토큰:', token, pk);
+                    console.log('로그인 화면에서 토큰:', token, pk, email);
                     Alert.alert('로그인 성공!');
-                    navigation.navigate('Blight', {token:accessToken, pk});
+                    navigation.navigate('UserQna', {token:accessToken, pk, email});
                 } else {
                     Alert.alert('로그인 실패');
                     console.log(`로그인 토큰 : ${token}`);
