@@ -14,6 +14,8 @@ import BlightScreen from './src/component/BlightScreen';
 import BlightDetailScreen from './src/component/BlightDetailScreen';
 
 import TestPhoto from './src/component/TestPhoto';
+import Camera from './src/component/Camera';
+import Result from './src/component/Result';
 
 import QnaScreen from './src/component/QnaScreen';
 import UserQnaScreen from './src/component/UserQnaScreen';
@@ -59,9 +61,11 @@ const App = () => {
                 <Stack.Screen name="Logout" component={LogoutScreen} />
 
                 <Stack.Screen name="TestPhoto" component={TestPhoto} />
+                <Stack.Screen name="Camera" component={Camera} />
 
                 <Stack.Screen name="Blight" component={BlightScreen} />
                 <Stack.Screen name="BlightDetail" component={BlightDetailScreen} />
+                <Stack.Screen name="Result" component={Result} />
             
                 <Stack.Screen name="Qna" component={QnaScreen} />
                 <Stack.Screen name="UserQna" component={UserQnaScreen} />

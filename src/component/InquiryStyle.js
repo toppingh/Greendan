@@ -6,10 +6,10 @@ import { useNavigation } from '@react-navigation/native';
 
 const InquiryStyle = ({ route }) => {
     const navigation = useNavigation();
-    const { label, datetime, explanation, pk } = route.params;
+    const { label, datetime, explanation, updatetime, pk } = route.params;
 
     const handleEditPress = () => {
-        navigation.navigate('EditInquiry', {label, datetime, explanation, pk});
+        navigation.navigate('EditInquiry', {label, datetime, explanation, updatetime, pk});
     };
 
     return (
@@ -22,6 +22,7 @@ const InquiryStyle = ({ route }) => {
                 <Text style={styles.title}>{label}</Text>
                 <Text style={styles.dateText}>Date: {datetime}</Text>
                 <Text style={styles.explanationText}>{explanation}</Text>
+                <Text style={styles.date}>{updatetime}</Text>
 
                 <TouchableOpacity style={styles.editButton} onPress={handleEditPress}>
                     <Text style={styles.editButtonText}>수정</Text>
@@ -58,6 +59,11 @@ const styles = StyleSheet.create({
     },
     dateText: {
         fontSize: 16,
+        color: 'gray',
+        marginBottom: 10,
+    },
+    date: {
+        fontSize: 10,
         color: 'gray',
         marginBottom: 10,
     },

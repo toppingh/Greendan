@@ -17,7 +17,7 @@ const Inquiry = () => {
     const fetchInquiries = async () => {
         console.log('문의 내역 로드 시작');
         try {
-            const response = await fetch(`http://192.168.35.29:8000/info/qna/`);
+            const response = await fetch(`http://172.18.80.87:8000/info/qna/`);
             if (!response.ok) {
                 throw new Error('문의 내역 로드 실패');
             }
@@ -133,12 +133,14 @@ const Inquiry = () => {
                                     label: item.title,
                                     datetime: item.created_at,
                                     explanation: item.content,
+                                    updatetime: item.updated_at,
                                     pk: item.id,
                                 });
                             }}
                         >
                             <Text style={styles.title}>{item.title}</Text>
                             <Text style={styles.date}>{item.created_at}</Text>
+                            <Text style={styles.dateText}>업데이트 : {item.updated_at}</Text>
                         </TouchableOpacity>
                     );
                 }}
@@ -267,6 +269,10 @@ const styles = StyleSheet.create({
     },
     date: {
         fontSize: 14,
+        color: 'gray',
+    },
+    dateText: {
+        fontSize: 10,
         color: 'gray',
     },
     flatListContent: {

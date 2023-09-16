@@ -30,7 +30,7 @@ const CreateQnaScreen = ({ navigation }) => {
         });
         console.log(`headers 정보: ${headers}`);
 
-        fetch('http://192.168.35.29:8000/info/qna/', {
+        fetch('http://172.18.80.87:8000/info/qna/', {
             method: 'POST',
             headers,
             body: JSON.stringify({

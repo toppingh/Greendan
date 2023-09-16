@@ -14,11 +14,11 @@ const EditInquiry = ({ route }) => {
 
     const handleSavePress = async () => {
         try {
-            const djServer = `http://192.168.35.29:8000/info/qna/${pk}/`;
+            const djServer = `http://172.18.80.87:8000/info/qna/edit/${pk}/`;
 
             const requestData = {
-                label: editedLabel,
-                explanation: editedExplanation,
+                newTitle: editedLabel,
+                newContent: editedExplanation,
             };
 
             const authToken = await AsyncStorage.getItem('authToken');
