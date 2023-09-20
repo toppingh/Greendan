@@ -16,6 +16,9 @@ import BlightDetailScreen from './src/component/BlightDetailScreen';
 import TestPhoto from './src/component/TestPhoto';
 import Camera from './src/component/Camera';
 import Result from './src/component/Result';
+import Pw_find from './src/component/Pw_find';
+import Pw_reset from './src/component/Pw_reset';
+import Input from './src/component/Input';
 
 import QnaScreen from './src/component/QnaScreen';
 import UserQnaScreen from './src/component/UserQnaScreen';
@@ -59,6 +62,9 @@ const App = () => {
                 <Stack.Screen name="ProfileImg" component={ProfileImgScreen} />
                 <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
                 <Stack.Screen name="Logout" component={LogoutScreen} />
+                <Stack.Screen name="Pw_find" component={Pw_find} />
+                <Stack.Screen name="Pw_reset" component={Pw_reset} />
+                <Stack.Screen name="Input" component={Input} />
 
                 <Stack.Screen name="TestPhoto" component={TestPhoto} />
                 <Stack.Screen name="Camera" component={Camera} />

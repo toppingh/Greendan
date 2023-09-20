@@ -89,7 +89,7 @@ const Camera = ({ navigation }) => {
       });
       formData.append('email', email);
 
-      const djServer = await fetch('http://192.168.35.29:8000/photo/test/', {
+      const djServer = await fetch('http://172.18.83.191/photo/test/', {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
